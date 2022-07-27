@@ -6,11 +6,12 @@ public class PlatformSpawner : MonoBehaviour
 {
     
     public GameObject platform;
-    public bool diceIsGrounded= false;  
+    public GameObject dice;
+    public bool diceIsGrounded;
 
     private void Update()
     {
-
+        diceIsGrounded = dice.GetComponent<DiceMovement>().diceIsGrounded;
     if (Input.GetMouseButtonDown(1)&& diceIsGrounded==false)
         {
             Debug.Log("spawning platform");
