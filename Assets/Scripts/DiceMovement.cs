@@ -5,15 +5,10 @@ using UnityEngine;
 public class DiceMovement : MonoBehaviour
 {
     public bool diceIsGrounded;
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        diceIsGrounded = false;
     }
     private void OnCollisionEnter(Collision collision)
     {
