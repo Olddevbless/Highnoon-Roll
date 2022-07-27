@@ -6,7 +6,7 @@ public class PlatformSpawner : MonoBehaviour
 {
     
     public GameObject platform;
-    public bool diceIsGrounded= false;
+    public bool diceIsGrounded= false;  
 
     private void Update()
     {
