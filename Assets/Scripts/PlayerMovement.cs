@@ -17,6 +17,8 @@ public class PlayerMovement : MonoBehaviour
     public float jumpTime;
     public bool isJumping;
     public bool playerIsGrounded;
+    public GameObject bullet;
+    Vector3 aimGun;
     void Start()
     {
         playerRB = gameObject.GetComponent<Rigidbody>();
@@ -28,6 +30,10 @@ public class PlayerMovement : MonoBehaviour
         
         diceIsGrounded = dice.GetComponent<DiceMovement>().diceIsGrounded;
         horizontalInput = Input.GetAxis("Horizontal");
+        Vector3 mousePos = Input.mousePosition;
+        mousePos += Camera.main.transform.forward * 30f; // Make sure to add some "depth" to the screen point
+        aimGun = Camera.main.ScreenToWorldPoint(new Vector3(mousePos[0], mousePos[1], 14f));
+        Shooting();
         Walking();
         Jumping();
         
@@ -80,6 +86,15 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Space))
         {
             isJumping = false;
+        }
+    }
+    void Shooting()
+    {
+       
+        if (Input.GetMouseButtonDown(0) && diceIsGrounded == true) 
+        {
+            Debug.Log("im shooting");
+            Instantiate(bullet, aimGun, bullet.transform.rotation);
         }
     }
 
