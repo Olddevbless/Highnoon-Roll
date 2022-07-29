@@ -23,5 +23,6 @@ public class PlatformSpawner : MonoBehaviour
             Instantiate(platform, aim, platform.transform.rotation);
         }
         
+        
     }
 }
