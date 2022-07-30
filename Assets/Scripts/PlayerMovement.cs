@@ -76,6 +76,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && diceIsGrounded == true && playerIsGrounded == true)
         {
+            //transform.Translate(Vector3.up);
             playerRB.AddForce(Vector3.up * jumpingPower, ForceMode.Impulse);
             jumpTimeCounter = jumpTime;
             isJumping = true;
@@ -84,7 +85,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (jumpTimeCounter>0)
             {
-                playerRB.AddForce(Vector3.up * jumpingPower);
+                playerRB.AddForce(Vector3.up* jumpingPower);
                 jumpTimeCounter -= Time.deltaTime;
               
             }
