@@ -753,7 +753,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c22777d6e868e4f2fb421913386b154e, type: 2}
+  - {fileID: 2100000, guid: bcd8fc6455d171040a2e41b68e88b733, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3199,9 +3199,17 @@ PrefabInstance:
       propertyPath: dice
       value: 
       objectReference: {fileID: 6486701780525891192}
+    - target: {fileID: 234837616, guid: 282ea0c80e9182c42b5aee8cb81fc91e, type: 3}
+      propertyPath: jumpingPower
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 518817061, guid: 282ea0c80e9182c42b5aee8cb81fc91e, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 518817063, guid: 282ea0c80e9182c42b5aee8cb81fc91e, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4400990367504850779, guid: 282ea0c80e9182c42b5aee8cb81fc91e, type: 3}
       propertyPath: m_RootOrder
@@ -3267,6 +3275,10 @@ PrefabInstance:
     - target: {fileID: 6286477774751410986, guid: 226aafe2e7e5e644884c9a337567a8e1, type: 3}
       propertyPath: m_Name
       value: Bullet
+      objectReference: {fileID: 0}
+    - target: {fileID: 6286477774751410986, guid: 226aafe2e7e5e644884c9a337567a8e1, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6765677352914956869, guid: 226aafe2e7e5e644884c9a337567a8e1, type: 3}
       propertyPath: m_RootOrder
@@ -3401,7 +3413,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6486701780525891192}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: fa5582d9495373f4eb9a4cd83fa27952, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -3421,7 +3433,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 8
   m_CollisionDetection: 0
 --- !u!114 &6486701780525891196
 MonoBehaviour:

@@ -99,6 +99,10 @@ public class PlayerMovement : MonoBehaviour
         {
             isJumping = false;
         }
+        if (gameObject.transform.position.y> 10)
+        {
+            playerRB.AddForce(Vector3.down,ForceMode.Acceleration);
+        }
     }
     void Shooting()
     {
