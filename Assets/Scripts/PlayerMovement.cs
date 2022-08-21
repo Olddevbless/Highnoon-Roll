@@ -57,7 +57,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] int bulletForce;
     [SerializeField] GameObject gunArm;
     [SerializeField] GameObject gunCylinder;
+    [SerializeField] int bulletDmg;
     [SerializeField] int maxAmmo;
+    [SerializeField] int inChamber;
     public int MaxAmmo { get { return maxAmmo; } }
     [SerializeField] [Range(0,6)] int currentAmmo;
     Vector3 aimGun;
@@ -65,9 +67,20 @@ public class PlayerMovement : MonoBehaviour
     [Header("Melee")]
     [SerializeField] float attackHeight;
     [SerializeField] int attackRange = 5;
+    [SerializeField] int lightAtkDmg;
+    [SerializeField] int heavyAtkDmg;
+    [SerializeField] bool isAttacking;
+    [SerializeField] float heavyAtkSpeed;
+    [SerializeField] float lightAtkSpeed;
+    [SerializeField] float attackSpeed;
+    [SerializeField] float attackTimer;
+    [SerializeField] float attackSlowMovement;
+
+
     
     void Start()
     {
+        
         canDash = true;
         capsuleCollider = gameObject.GetComponent<CapsuleCollider>();
         normalHeight = capsuleCollider.height;
@@ -84,7 +97,10 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (isAttacking == false)
+        {
+            attackSlowMovement = 1;
+        }
         playerPos = gameObject.transform.position;
         diceIsGrounded = diceScript.diceIsGrounded;
         horizontalInput = Input.GetAxis("Horizontal");
@@ -94,6 +110,7 @@ public class PlayerMovement : MonoBehaviour
         Jumping();
         AmmoCount();
         Crouching();
+        AttackTimer();
         Attacking();
         Dashing();
         Rotating();
@@ -162,7 +179,7 @@ public class PlayerMovement : MonoBehaviour
         }
         if (horizontalInput > 0.01 && diceIsGrounded == true && !isRunningAnim)
         {
-            transform.Translate(new Vector3(1*horizontalInput,0,0) * speed * Time.deltaTime);
+            transform.Translate(new Vector3((1*horizontalInput)/attackSlowMovement,0,0) * speed * Time.deltaTime);
             animator.SetBool(isRunningAnimHash, true);
             if (animator.GetBool("IsCrouching") == true)
             {
@@ -175,7 +192,7 @@ public class PlayerMovement : MonoBehaviour
             
         if (horizontalInput < -0.01 && diceIsGrounded == true&& !isRunningAnim)
         {
-            transform.Translate(new Vector3(-1*horizontalInput,0,0) * speed * Time.deltaTime);
+            transform.Translate(new Vector3((-1*horizontalInput)/attackSlowMovement,0,0) * speed * Time.deltaTime);
                 animator.SetBool(isRunningAnimHash,true);
 
             if (animator.GetBool("IsCrouching") == true)
@@ -277,7 +294,7 @@ public class PlayerMovement : MonoBehaviour
     void Shooting()
     {
        
-        if (Input.GetMouseButtonDown(0) && diceIsGrounded == true&& currentAmmo>0) 
+        if (Input.GetMouseButtonDown(0) && diceIsGrounded == true&& currentAmmo>0 && inChamber>0) 
         {
             
             Debug.Log("im shooting");
@@ -288,15 +305,138 @@ public class PlayerMovement : MonoBehaviour
             Rigidbody bulletRB = bullet.GetComponent<Rigidbody>();
             bulletRB.AddForce(movingStep, ForceMode.Impulse);
             currentAmmo--;
+            inChamber = 0;
+
         }
+        if (Input.GetMouseButtonDown(0) && diceIsGrounded == true && currentAmmo > 0 && inChamber == 0)
+        {
+            Debug.Log("Reloading");
+            animator.SetTrigger("IsReloading");
+            attackSlowMovement = 2;
+            Invoke( "Reload",2);
+        }
+        if (Input.GetKeyDown(KeyCode.R) && diceIsGrounded == true && currentAmmo > 0 && inChamber == 0)
+        {
+            Debug.Log("Reloading");
+            animator.SetTrigger("IsReloading");
+            attackSlowMovement = 2;
+            Invoke("Reload", 2);
+        }
+        if (Input.GetMouseButtonDown(0) && diceIsGrounded == true && currentAmmo == 0)
+        {
+            // play empty gun SFX
+        }
+    }
+    void Reload()
+    {
+        attackSlowMovement = 1;
+        inChamber = 1;
+        Debug.Log("Reload complete, in chamber" + inChamber);
     }
     void Attacking()
     {
-        if (Input.GetKey(KeyCode.Mouse2)&& diceIsGrounded)
+        
+        if (Input.GetKeyDown(KeyCode.Mouse2)&& diceIsGrounded&& attackTimer<1)
         {
-            Ray hitRay = new Ray(new Vector3(playerPos.x,playerPos.y+attackHeight,playerPos.z), Vector3.right * attackRange) ;
-            Debug.DrawRay(new Vector3(playerPos.x, playerPos.y + attackHeight, playerPos.z), Vector3.right * attackRange);
+
+            
+                if (Input.GetKey(KeyCode.C))
+                {
+                    RaycastHit crouchHit;
+                    Ray crouchRay = new Ray(new Vector3(playerPos.x, playerPos.y, playerPos.z), Vector3.right * attackRange);
+                    Debug.DrawRay(new Vector3(playerPos.x, playerPos.y, playerPos.z), Vector3.right * attackRange);
+                    isAttacking = true;
+                    attackTimer = attackSpeed;
+                    StartCoroutine(AttackMoveSlow());
+                    if (Physics.Raycast (crouchRay, out crouchHit,attackRange))
+                    {
+                            if(crouchHit.collider.tag == "Enemy")
+                            {
+                            crouchHit.collider.gameObject.GetComponent<Enemy>().TakeDamage(3);
+                            }
+                    }
+                
+                }
+                else
+                {
+                    RaycastHit hit;
+                    Ray hitRay = new Ray(new Vector3(playerPos.x, playerPos.y + attackHeight, playerPos.z), Vector3.right * attackRange);
+                    Debug.DrawRay(new Vector3(playerPos.x, playerPos.y + attackHeight, playerPos.z), Vector3.right * attackRange);
+                    isAttacking = true;
+                    attackTimer = attackSpeed;
+                    StartCoroutine(AttackMoveSlow());
+                    if( Physics.Raycast(hitRay,out hit, attackRange))
+                    {
+                        if (hit.collider.tag == "Enemy") 
+                        {
+                                hit.collider.gameObject.GetComponent<Enemy>().TakeDamage(1);
+                        }
+                    }
+                
+                }
+            
+
+            
+            
         }
+        if (Input.GetKeyDown(KeyCode.Mouse3) && diceIsGrounded && attackTimer <= 0)
+        {
+            if (Input.GetKey(KeyCode.C))
+            {
+                RaycastHit crouchHitHeavy;
+                Ray crouchRayHeavy = new Ray(new Vector3(playerPos.x, playerPos.y, playerPos.z), Vector3.right * attackRange * 1.5f);
+                Debug.DrawRay(new Vector3(playerPos.x, playerPos.y, playerPos.z), Vector3.right * attackRange * 1.5f);
+                isAttacking = true;
+                attackTimer = attackSpeed;
+                StartCoroutine(AttackMoveSlow());
+
+                if (Physics.Raycast(crouchRayHeavy, out crouchHitHeavy, attackRange * 1.5f))
+                {
+                    if (crouchHitHeavy.collider.tag == "Enemy")
+                    {
+                        crouchHitHeavy.collider.gameObject.GetComponent<Enemy>().TakeDamage(1);
+                    }
+                }
+                 
+            }
+
+
+            else
+            {
+                RaycastHit hitHeavy;
+                Ray hitRayHeavy = new Ray(new Vector3(playerPos.x, playerPos.y + attackHeight, playerPos.z), Vector3.right * attackRange);
+                Debug.DrawRay(new Vector3(playerPos.x, playerPos.y + attackHeight, playerPos.z), Vector3.right * attackRange);
+                isAttacking = true;
+                attackTimer = attackSpeed;
+                StartCoroutine(AttackMoveSlow());
+                if (Physics.Raycast(hitRayHeavy, out hitHeavy, attackRange * 1.5f))
+                        {
+                    if (hitHeavy.collider.tag == "Enemy")
+                    {
+                        hitHeavy.collider.gameObject.GetComponent<Enemy>().TakeDamage(3);
+                    }
+                }
+            }
+        }
+
+
+
+    }
+    
+    
+    void AttackTimer()
+    {
+        if (attackTimer>0f)
+        {
+            attackTimer -= Time.deltaTime;
+        }
+        
+    }
+    IEnumerator AttackMoveSlow()
+    {
+        attackSlowMovement = 2f;
+        yield return new WaitForSeconds(0.5f);
+        isAttacking = false;
     }
    
     void Dashing()
