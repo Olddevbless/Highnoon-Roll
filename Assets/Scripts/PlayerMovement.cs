@@ -61,7 +61,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] int maxAmmo;
     [SerializeField] int inChamber;
     public int MaxAmmo { get { return maxAmmo; } }
-    [SerializeField] [Range(0,6)] int currentAmmo;
+    public int currentAmmo;
     Vector3 aimGun;
 
     [Header("Melee")]
@@ -352,7 +352,7 @@ public class PlayerMovement : MonoBehaviour
                     {
                             if(crouchHit.collider.tag == "Enemy")
                             {
-                            crouchHit.collider.gameObject.GetComponent<Enemy>().TakeDamage(3);
+                            crouchHit.collider.gameObject.GetComponent<HeavyBehaviour>().TakeDamage(3);
                             }
                     }
                 
@@ -369,7 +369,7 @@ public class PlayerMovement : MonoBehaviour
                     {
                         if (hit.collider.tag == "Enemy") 
                         {
-                                hit.collider.gameObject.GetComponent<Enemy>().TakeDamage(1);
+                                hit.collider.gameObject.GetComponent<HeavyBehaviour>().TakeDamage(1);
                         }
                     }
                 
@@ -394,7 +394,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     if (crouchHitHeavy.collider.tag == "Enemy")
                     {
-                        crouchHitHeavy.collider.gameObject.GetComponent<Enemy>().TakeDamage(1);
+                        crouchHitHeavy.collider.gameObject.GetComponent<HeavyBehaviour>().TakeDamage(1);
                     }
                 }
                  
@@ -413,7 +413,7 @@ public class PlayerMovement : MonoBehaviour
                         {
                     if (hitHeavy.collider.tag == "Enemy")
                     {
-                        hitHeavy.collider.gameObject.GetComponent<Enemy>().TakeDamage(3);
+                        hitHeavy.collider.gameObject.GetComponent<HeavyBehaviour>().TakeDamage(3);
                     }
                 }
             }

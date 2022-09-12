@@ -2,101 +2,46 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy 
 {
-    [Header("Enemy Stats")]
-    [SerializeField] int lightDmg;
-    [SerializeField] int heavyDmg;
-    [SerializeField] int shotDmg;
-    [SerializeField] int enemyHealth = 10;
-    [SerializeField] int currentHealth;
-
-    [Header("Enemy Behavior")]
-    [SerializeField] bool isAggressive;
-    [SerializeField] bool isDodging;
-    [SerializeField] bool isHesitant;
-    [SerializeField] int aggroHP;
-    [SerializeField] int hesitantHP;
-    [SerializeField] int dodgingHP;
-    [SerializeField] bool isAttacking;
-
-    [Header("Player Pathfinding")]
-    GameObject player;
-    float distanceFromPlayer;
-
-    private void Awake()
+    public GameObject bossGameObject;
+    public enum EnemyFSM
     {
-        player = FindObjectOfType<PlayerMovement>().gameObject;
+        Aggressive,
+        Evasive,
+        Hesitant,
+        Stunned,
+        Idle
     }
-    void Start()
-    {
-        // decide starting behavior, isAggressive = true;/isDodge = true;/isHesitant=true;
-        currentHealth = enemyHealth;
-    }
-    private void Update()
-    {
-        distanceFromPlayer = player.transform.position.x - this.transform.position.x;
 
-        if (currentHealth >= aggroHP)
-        {
-            isAggressive = true;
-        }
-        if (currentHealth <= hesitantHP)
-        {
-            isHesitant = true;
-        }
-        if (currentHealth <= dodgingHP)
-        {
-            isDodging = true;
-        }
+    public virtual void UpdateEnemy(GameObject playerGameObject)
+    {
+       
     }
     
-    // Behaviors
-    void Dodging()
+    void Behaviour(GameObject playerGameObject, EnemyFSM modes)
     {
-
-    }
-    void Hesitant()
-    {
-
-    }
-    void Aggresive()
-    {
-
-    }
-
-    // Actions
-    void Dodge()
-    {
-
-    }
-    void Jump()
-    {
-
-    }
-    void Attacks()
-    {
-        if (distanceFromPlayer<lightAttackRange&& isAttacking==false)
+        int speed = 5;
+       
+        switch (modes)
         {
-            isAttacking = true;
-            Invoke("LightAttack", 0.5f);
-        }
-        if (distanceFromPlayer<heavyAttackRange&& isAttacking == false)
-        {
-            isAttacking = true;
-            Invoke("HeavyAttack", 1f);
-        }
-    }
-    void LightAttack()
-    {
+            case EnemyFSM.Aggressive:
+                bossGameObject.transform.position = Vector3.MoveTowards(bossGameObject.transform.position, playerGameObject.transform.position, speed * Time.deltaTime);
+                //dodge less and move towards player
+                break;
+            case EnemyFSM.Evasive:
+                //dodge more and move away from player
+                break;
+            case EnemyFSM.Hesitant:
+                //dodge and attack equally
+                break;
+            case EnemyFSM.Stunned:
+                //stop movement for a few seconds and play animation
+                break;
+            case EnemyFSM.Idle:
+                //play idle animation if not performing any action
+                break;
 
-    }
-    void HeavyAttack()
-    {
-
-    }
-    public void TakeDamage(int i)
-    {
-        currentHealth -= i;
+        }
     }
 }
