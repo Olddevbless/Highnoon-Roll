@@ -22,6 +22,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float jumpTime;
     [SerializeField] bool isJumping;
     [SerializeField] bool playerIsGrounded;
+    [SerializeField] float coyoteTimeCounter;
+    [SerializeField] float coyoteTime;
+    [SerializeField] float jumpBufferCounter;
+    [SerializeField] float jumpBufferTime;
 
     [Header("Dashing")]
     [SerializeField] int dirFacing;
@@ -97,13 +101,34 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+        playerPos = gameObject.transform.position;
+        diceIsGrounded = diceScript.diceIsGrounded;
+        horizontalInput = Input.GetAxis("Horizontal");
         if (isAttacking == false)
         {
             attackSlowMovement = 1;
         }
-        playerPos = gameObject.transform.position;
-        diceIsGrounded = diceScript.diceIsGrounded;
-        horizontalInput = Input.GetAxis("Horizontal");
+        if (playerIsGrounded)
+        {
+            coyoteTimeCounter = coyoteTime;
+            isJumping = false;
+        }
+        else
+        {
+            coyoteTimeCounter -= Time.deltaTime;
+            isJumping = true;
+
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            jumpBufferCounter = jumpBufferTime;
+        }
+        else
+        {
+            jumpBufferCounter -= Time.deltaTime;
+
+        }
         MouseAndGunAim();
         Shooting();
         Walking();
@@ -252,43 +277,55 @@ public class PlayerMovement : MonoBehaviour
     }
     void Jumping ()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && diceIsGrounded == true && playerIsGrounded == true)
+        if (jumpBufferCounter > 0 && coyoteTimeCounter > 0&& diceIsGrounded== true&&isJumping==false)
         {
-            //transform.Translate(Vector3.up);
-            animator.SetFloat("Velocity", Time.deltaTime * velocity);
             playerRB.AddForce(Vector3.up * jumpingPower, ForceMode.Impulse);
+            coyoteTimeCounter = 0;
+            jumpBufferCounter = 0;
 
-            animator.SetTrigger("Jump");
-            
-            jumpTimeCounter = jumpTime;
-            animator.SetBool("IsInTheAir", true);
-            animator.SetBool("IsLanding", false);
-            isJumping = true;
-        }
-        if (Input.GetKey(KeyCode.Space)&& isJumping == true)
-        {
-            if (jumpTimeCounter>0)
-            {
-                playerRB.AddForce(Vector3.up* jumpingPower);
-                jumpTimeCounter -= Time.deltaTime;
-                animator.SetBool("IsInTheAir", true);
-            }
-            else
-            {
-                animator.SetFloat("Velocity", Time.deltaTime * -velocity);
-                isJumping = false;
-            }
             
         }
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.S)&& isJumping==true)
         {
-            isJumping = false;
+            playerRB.AddForce(Vector3.down* jumpingPower, ForceMode.Impulse);
         }
-        if (gameObject.transform.position.y> 10)
-        {
-            playerRB.AddForce(Vector3.down,ForceMode.Acceleration);
+        //if (Input.GetKeyDown(KeyCode.Space) && diceIsGrounded == true && playerIsGrounded == true)
+        //{
+        //    //transform.Translate(Vector3.up);
+        //    animator.SetFloat("Velocity", Time.deltaTime * velocity);
+        //    playerRB.AddForce(Vector3.up * jumpingPower, ForceMode.Impulse);
+
+        //    animator.SetTrigger("Jump");
             
-        }
+        //    jumpTimeCounter = jumpTime;
+        //    animator.SetBool("IsInTheAir", true);
+        //    animator.SetBool("IsLanding", false);
+        //    isJumping = true;
+        //}
+        //if (Input.GetKey(KeyCode.Space)&& isJumping == true)
+        //{
+        //    if (jumpTimeCounter>0)
+        //    {
+        //        playerRB.AddForce(Vector3.up* jumpingPower);
+        //        jumpTimeCounter -= Time.deltaTime;
+        //        animator.SetBool("IsInTheAir", true);
+        //    }
+        //    else
+        //    {
+        //        animator.SetFloat("Velocity", Time.deltaTime * -velocity);
+        //        isJumping = false;
+        //    }
+            
+        //}
+        //if (Input.GetKeyUp(KeyCode.Space))
+        //{
+        //    isJumping = false;
+        //}
+        //if (gameObject.transform.position.y> 10)
+        //{
+        //    playerRB.AddForce(Vector3.down,ForceMode.Acceleration);
+            
+        //}
         
     }
     void Shooting()
