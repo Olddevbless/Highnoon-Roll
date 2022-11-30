@@ -4934,9 +4934,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fb961585943ab94b967e1799317fe6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _npc: {fileID: 0}
-  _target: {fileID: 0}
-  _npcAttacks: 
+  _npc: {fileID: 2377560503267820351}
+  _target: {fileID: 1143458000}
 --- !u!114 &2377560503267820352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4953,6 +4952,34 @@ MonoBehaviour:
   _validStates:
   - {fileID: 11400000, guid: 56f4d3c3442f7d94eafdc62913f31d34, type: 2}
   - {fileID: 11400000, guid: 6a0197783a9aaaa48881c17286087be4, type: 2}
+--- !u!114 &2377560503267820353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2377560503267820350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 967c3e473d318b24b9b583bab84210f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dashActive: 0
+  jumpActive: 0
+  crouchActive: 0
+  shootActive: 0
+  heavyAttackActive: 0
+  lightAttackActive: 0
+  bulletsAvailable: 0
+  lightAttackRange: 0
+  heavyAttackRange: 0
+  heavyAttackDMG: 0
+  lightAttackDMG: 0
+  capsuleCollider: {fileID: 0}
+  currentHeight: 0
+  normalHeight: 0
+  crouchHeight: 0
+  centerChange: 0
 --- !u!1001 &6486701780525891191
 PrefabInstance:
   m_ObjectHideFlags: 0

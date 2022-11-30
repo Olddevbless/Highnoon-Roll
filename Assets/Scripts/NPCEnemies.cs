@@ -9,7 +9,7 @@ public class NPCEnemies : MonoBehaviour
     FiniteStateMachine finiteStateMachine;
     [SerializeField] NPCEnemies _npc;
     [SerializeField] GameObject _target;
-    [SerializeField] int[] _npcAttacks;
+    //[SerializeField] int[] _npcAttacks;
     public void Awake()
     {
         finiteStateMachine = GetComponent<FiniteStateMachine>();
@@ -36,11 +36,11 @@ public class NPCEnemies : MonoBehaviour
             return _target;
         }
     }
-    public int[] npcAttacks
-    {
-        get
-        {
-            return _npcAttacks;
-        }
-    }    
+    //public int[] npcAttacks
+    //{
+    //    get
+    //    {
+    //        return _npcAttacks;
+    //    }
+    //}    
 }

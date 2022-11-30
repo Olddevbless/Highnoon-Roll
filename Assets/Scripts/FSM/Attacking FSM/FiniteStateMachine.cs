@@ -16,13 +16,13 @@ public class FiniteStateMachine : MonoBehaviour
         _fsmStates = new Dictionary<FSMStateType, AbstractFSMClass>();
         NPCEnemies npc = this.GetComponent<NPCEnemies>().npc;
         GameObject target = this.GetComponent<NPCEnemies>().target;
-        int[] attacks = this.GetComponent<NPCEnemies>().npcAttacks;
+        //int[] attacks = this.GetComponent<NPCEnemies>().npcAttacks;
         foreach (AbstractFSMClass state in _validStates)
         {
             state.SetExecutingFSM(this);
             state.SetExecutingNPC(npc);
             state.SetTarget(target);
-            state.SetAttacks(attacks);
+            //state.SetAttacks(attacks);
             _fsmStates.Add(state.StateType, state);
         }
     }
