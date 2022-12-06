@@ -9,7 +9,7 @@ public class FightingState : AbstractFSMClass
     int roll;
     GameObject _targetInFState;
     NPCEnemies _npcInFState;
-    int[] _npcAttacksInFState;
+    EnemyAbilities enemyAbilities;
     public override void OnEnable()
     {
         StateType = FSMStateType.FIGHTING;
@@ -21,9 +21,10 @@ public class FightingState : AbstractFSMClass
         {
             EnteredState = false;
             //grab and store target & NPC & attacks
-            _npcAttacksInFState = npcAttacks;
+            enemyAbilities = _npc.gameObject.GetComponent<EnemyAbilities>();
             _npcInFState = _npc.npc;
             _targetInFState = _target.gameObject;
+
             if (_npcInFState == null)
             {
                 Debug.LogError("FightingState: Failed to grab NPC from NPCEnemies");
@@ -34,7 +35,7 @@ public class FightingState : AbstractFSMClass
             {
                 Debug.LogError("FightingState: Failed to grab Target from NPCEnemies");
             }
-            if (_npcAttacksInFState == null)
+            if (enemyAbilities == null)
             {
                 Debug.Log("FightingState: Failed to grab Attacks from NPCEnemies");
 
@@ -53,7 +54,10 @@ public class FightingState : AbstractFSMClass
         // make sure the we've successfully entered state
         if (EnteredState)
         {
-            
+            if (Input.GetKey(KeyCode.O))
+            {
+                enemyAbilities.Crouch();
+            }
         }
     }
 
@@ -87,92 +91,78 @@ public class FightingState : AbstractFSMClass
     }
     public void UpLightD()
     {
-        if (roll<15)
+        if (roll <= enemyAbilities.lightDrolls[0]) 
         {
             //jump
         }
-        if (15 < roll && roll< 40)
+        if (enemyAbilities.lightDrolls[0] < roll && roll<= enemyAbilities.lightDrolls[1])
         {
             //dash
         }
-        if (roll>40 && roll <60)
+        if (roll>enemyAbilities.lightDrolls[1] && roll <= enemyAbilities.lightDrolls[3])
         {
-            //duck
+            enemyAbilities.Crouch();
         }
-        if (roll>60 && roll<80)
-        {
-            //duck
-        }
-        if (roll>80&& roll>100)
+        if (roll>enemyAbilities.lightDrolls[3]&& roll >= enemyAbilities.lightDrolls[4])
         {
             //duck&attack
         }
     }
     public void UpHeavyD()
     {
-        if (roll < 7)
+        if (roll <= enemyAbilities.heavyDrolls[0])
         {
             //jump
         }
-        if (7 < roll && roll < 40)
+        if (enemyAbilities.heavyDrolls[0] < roll && roll <= enemyAbilities.heavyDrolls[1])
         {
             //dash
         }
-        if (roll > 40 && roll < 60)
+        if (roll > enemyAbilities.heavyDrolls[1] && roll <= enemyAbilities.heavyDrolls[3])
         {
-            //duck
+            enemyAbilities.Crouch();
         }
-        if (roll > 60 && roll < 80)
-        {
-            //duck
-        }
-        if (roll > 80 && roll > 100)
+        
+        if (roll > enemyAbilities.heavyDrolls[3] && roll <= enemyAbilities.heavyDrolls[4])
         {
             //duck&attack
         }
     }
     public void DownLightD()
     {
-        if (roll < 15)
+        if (roll <= enemyAbilities.lightDrolls[0])
         {
-            //duck
+            enemyAbilities.Crouch();
         }
-        if (15 < roll && roll < 40)
+        if (enemyAbilities.lightDrolls[0] < roll && roll <= enemyAbilities.lightDrolls[1])
         {
             //dash
         }
-        if (roll > 40 && roll < 60)
+        if (roll > enemyAbilities.lightDrolls[1] && roll <= enemyAbilities.lightDrolls[3])
         {
             //jump
         }
-        if (roll > 60 && roll < 80)
-        {
-            //jump
-        }
-        if (roll > 80 && roll > 100)
+        if (roll > enemyAbilities.lightDrolls[3] && roll >= enemyAbilities.lightDrolls[4])
         {
             //jump&attack
         }
     }
     public void DownHeavyD()
     {
-        if (roll < 7)
+        if (roll <= enemyAbilities.heavyDrolls[0])
         {
-            //duck
+            enemyAbilities.Crouch();
         }
-        if (7 < roll && roll < 40)
+        if (enemyAbilities.heavyDrolls[0] < roll && roll <= enemyAbilities.heavyDrolls[1])
         {
             //dash
         }
-        if (roll > 40 && roll < 60)
+        if (roll > enemyAbilities.heavyDrolls[1] && roll <= enemyAbilities.heavyDrolls[3])
         {
             //jump
         }
-        if (roll > 60 && roll < 80)
-        {
-            //jump
-        }
-        if (roll > 80 && roll > 100)
+
+        if (roll > enemyAbilities.heavyDrolls[3] && roll <= enemyAbilities.heavyDrolls[4])
         {
             //jump&attack
         }

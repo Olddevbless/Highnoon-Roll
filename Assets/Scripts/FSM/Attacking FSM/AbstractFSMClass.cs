@@ -72,11 +72,5 @@ public abstract class AbstractFSMClass : ScriptableObject
             _fsm = fsm;
         }
     }
-    public virtual void SetAttacks(int[] attacks)
-    {
-        if(attacks != null)
-        {
-            attacks = npcAttacks;
-        }
-    }
+    
 }

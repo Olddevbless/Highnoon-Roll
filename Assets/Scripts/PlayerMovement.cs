@@ -34,6 +34,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float dashCooldownTimer;
     [SerializeField] float dashCooldown;
 
+    [Header("Status")]
+    public int maxHP;
+    public int currentHP;
+
     [Header("Walking")]
     [SerializeField] float horizontalInput;
     [SerializeField] Rigidbody playerRB;
@@ -79,12 +83,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float attackSpeed;
     [SerializeField] float attackTimer;
     [SerializeField] float attackSlowMovement;
+    Vector3 playerDir;
 
 
     
     void Start()
     {
-        
+        currentHP = maxHP;
         canDash = true;
         capsuleCollider = gameObject.GetComponent<CapsuleCollider>();
         normalHeight = capsuleCollider.height;
@@ -105,6 +110,9 @@ public class PlayerMovement : MonoBehaviour
         playerPos = gameObject.transform.position;
         diceIsGrounded = diceScript.diceIsGrounded;
         horizontalInput = Input.GetAxis("Horizontal");
+        playerDir = new Vector3(dirFacing, 0, 0);
+        
+        
         if (isAttacking == false)
         {
             attackSlowMovement = 1;
@@ -380,8 +388,8 @@ public class PlayerMovement : MonoBehaviour
                 if (Input.GetKey(KeyCode.C))
                 {
                     RaycastHit crouchHit;
-                    Ray crouchRay = new Ray(new Vector3(playerPos.x, playerPos.y, playerPos.z), Vector3.right * attackRange);
-                    Debug.DrawRay(new Vector3(playerPos.x, playerPos.y, playerPos.z), Vector3.right * attackRange);
+                    Ray crouchRay = new Ray(new Vector3(playerPos.x, playerPos.y, playerPos.z), playerDir * attackRange);
+                    Debug.DrawRay(new Vector3(playerPos.x, playerPos.y, playerPos.z), playerDir * attackRange);
                     isAttacking = true;
                     attackTimer = attackSpeed;
                     StartCoroutine(AttackMoveSlow());
@@ -397,8 +405,8 @@ public class PlayerMovement : MonoBehaviour
                 else
                 {
                     RaycastHit hit;
-                    Ray hitRay = new Ray(new Vector3(playerPos.x, playerPos.y + attackHeight, playerPos.z), Vector3.right * attackRange);
-                    Debug.DrawRay(new Vector3(playerPos.x, playerPos.y + attackHeight, playerPos.z), Vector3.right * attackRange);
+                    Ray hitRay = new Ray(new Vector3(playerPos.x, playerPos.y + attackHeight, playerPos.z), playerDir * attackRange);
+                    Debug.DrawRay(new Vector3(playerPos.x, playerPos.y + attackHeight, playerPos.z), playerDir * attackRange);
                     isAttacking = true;
                     attackTimer = attackSpeed;
                     StartCoroutine(AttackMoveSlow());
@@ -421,8 +429,8 @@ public class PlayerMovement : MonoBehaviour
             if (Input.GetKey(KeyCode.C))
             {
                 RaycastHit crouchHitHeavy;
-                Ray crouchRayHeavy = new Ray(new Vector3(playerPos.x, playerPos.y, playerPos.z), Vector3.right * attackRange * 1.5f);
-                Debug.DrawRay(new Vector3(playerPos.x, playerPos.y, playerPos.z), Vector3.right * attackRange * 1.5f);
+                Ray crouchRayHeavy = new Ray(new Vector3(playerPos.x, playerPos.y, playerPos.z), playerDir * attackRange * 1.5f);
+                Debug.DrawRay(new Vector3(playerPos.x, playerPos.y, playerPos.z), playerDir * attackRange * 1.5f);
                 isAttacking = true;
                 attackTimer = attackSpeed;
                 StartCoroutine(AttackMoveSlow());
@@ -441,8 +449,8 @@ public class PlayerMovement : MonoBehaviour
             else
             {
                 RaycastHit hitHeavy;
-                Ray hitRayHeavy = new Ray(new Vector3(playerPos.x, playerPos.y + attackHeight, playerPos.z), Vector3.right * attackRange);
-                Debug.DrawRay(new Vector3(playerPos.x, playerPos.y + attackHeight, playerPos.z), Vector3.right * attackRange);
+                Ray hitRayHeavy = new Ray(new Vector3(playerPos.x, playerPos.y + attackHeight, playerPos.z), playerDir * attackRange);
+                Debug.DrawRay(new Vector3(playerPos.x, playerPos.y + attackHeight, playerPos.z), playerDir * attackRange);
                 isAttacking = true;
                 attackTimer = attackSpeed;
                 StartCoroutine(AttackMoveSlow());
@@ -509,6 +517,10 @@ public class PlayerMovement : MonoBehaviour
             canDash = true;
         }
 
+    }
+    public void TakeDamage(int damage)
+    {
+        currentHP -= damage;
     }
 
 
