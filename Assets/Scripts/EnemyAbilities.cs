@@ -165,7 +165,7 @@ public class EnemyAbilities : MonoBehaviour
     public void Movement()
     {
         
-        gameObject.transform.Translate(enemyDirection * moveSpeed * Time.delta''Time);
+        gameObject.transform.Translate(enemyDirection * moveSpeed * Time.deltaTime);
     }
 
 }
